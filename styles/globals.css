@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gauge {
+  background: linear-gradient(to right, #e84c3d, #f1c40f, #9baa1e, #1eaa59);
+  width: 320px;
+  height: 160px;
+  border-radius: 160px 160px 0 0;
+  position: relative;
+  overflow: visible;
+}
+
+.gaugeCenter {
+  width: 86%;
+  height: 86%;
+  background: hsl(var(--heroui-background));
+  border-radius: 160px 160px 0 0;
+  position: absolute;
+  box-shadow: 0 -10px 11px -6px #00000047;
+  right: 7%;
+  bottom: 0;
+}
+
+.needle {
+  width: 150px;
+  height: 7px;
+  background: #15222e;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 5px;
+  position: absolute;
+  bottom: 4px;
+  left: 10px;
+  transform-origin: 100% 4px;
+  box-shadow: 0 2px 2px 1px #00000061;
+}
+
+.number {
+  position: absolute;
+  top: -11px;
+  left: -50px;
+  transform-origin: center;
+  font-size: 16px;
+  border-radius: 100%;
+  background: #15222e;
+  color: #fff;
+  padding: 4px;
+  width: 32px;
+  height: 32px;
+  z-index: 10;
+  text-align: center;
+  line-height: 22px;
+}
