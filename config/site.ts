@@ -13,8 +13,8 @@ export const siteConfig = {
       href: 'https://jup.ag/swap/SOL-DdtbTZmi6sSXCMeSWrMFPJxBeLvb86apEwmdxumcpump',
     },
   ],
-  fearToken: 'F7B2p5PXRuAAHRpDsAoneNynRgkCfgh9EjP4oG1FChND',
-  greedToken: 'FDjkhUeXHiGVDsieUyyKjXSnKDdBvtmGrjg4ZZ5QmAAk',
+  fearToken: '9L9kmv6qNrjtZR85CHYppzv56UvvFQzmXiiYPxLJpump',
+  greedToken: 'DdtbTZmi6sSXCMeSWrMFPJxBeLvb86apEwmdxumcpump',
   fearPair: 'F7B2p5PXRuAAHRpDsAoneNynRgkCfgh9EjP4oG1FChND',
   greedPair: 'FDjkhUeXHiGVDsieUyyKjXSnKDdBvtmGrjg4ZZ5QmAAk',
   links: {

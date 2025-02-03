@@ -157,9 +157,11 @@ export default function IndexPage() {
                 <br />
                 <span
                   className={clsx(
-                    fearData.priceChange.m5 >= 0
+                    fearData.priceChange.m5 > 0.01
                       ? 'text-success'
-                      : 'text-danger',
+                      : fearData.priceChange.m5 < -0.01
+                        ? 'text-danger'
+                        : 'text-default-500',
                   )}
                 >
                   {fearData.priceChange.m5 ?? 0}%
@@ -170,9 +172,11 @@ export default function IndexPage() {
                 <br />
                 <span
                   className={clsx(
-                    fearData.priceChange.h1 >= 0
+                    fearData.priceChange.h1 > 0.01
                       ? 'text-success'
-                      : 'text-danger',
+                      : fearData.priceChange.h1 < -0.01
+                        ? 'text-danger'
+                        : 'text-default-500',
                   )}
                 >
                   {fearData.priceChange.h1 ?? 0}%
@@ -183,9 +187,11 @@ export default function IndexPage() {
                 <br />
                 <span
                   className={clsx(
-                    fearData.priceChange.h6 >= 0
+                    fearData.priceChange.h6 > 0.01
                       ? 'text-success'
-                      : 'text-danger',
+                      : fearData.priceChange.h6 < -0.01
+                        ? 'text-danger'
+                        : 'text-default-500',
                   )}
                 >
                   {fearData.priceChange.h6 ?? 0}%
@@ -196,9 +202,11 @@ export default function IndexPage() {
                 <br />
                 <span
                   className={clsx(
-                    fearData.priceChange.h24 >= 0
+                    fearData.priceChange.h24 > 0.01
                       ? 'text-success'
-                      : 'text-danger',
+                      : fearData.priceChange.h24 < -0.01
+                        ? 'text-danger'
+                        : 'text-default-500',
                   )}
                 >
                   {fearData.priceChange.h24 ?? 0}%
@@ -271,9 +279,11 @@ export default function IndexPage() {
                 <br />
                 <span
                   className={clsx(
-                    greedData.priceChange.m5 >= 0
+                    greedData.priceChange.m5 > 0.01
                       ? 'text-success'
-                      : 'text-danger',
+                      : greedData.priceChange.m5 < -0.01
+                        ? 'text-danger'
+                        : 'text-default-500',
                   )}
                 >
                   {greedData.priceChange.m5 ?? 0}%
@@ -284,9 +294,11 @@ export default function IndexPage() {
                 <br />
                 <span
                   className={clsx(
-                    greedData.priceChange.h1 >= 0
+                    greedData.priceChange.h1 > 0.01
                       ? 'text-success'
-                      : 'text-danger',
+                      : greedData.priceChange.h1 < -0.01
+                        ? 'text-danger'
+                        : 'text-default-500',
                   )}
                 >
                   {greedData.priceChange.h1 ?? 0}%
@@ -297,9 +309,11 @@ export default function IndexPage() {
                 <br />
                 <span
                   className={clsx(
-                    greedData.priceChange.h6 >= 0
+                    greedData.priceChange.h6 > 0.01
                       ? 'text-success'
-                      : 'text-danger',
+                      : greedData.priceChange.h6 < -0.01
+                        ? 'text-danger'
+                        : 'text-default-500',
                   )}
                 >
                   {greedData.priceChange.h6 ?? 0}%
@@ -310,9 +324,11 @@ export default function IndexPage() {
                 <br />
                 <span
                   className={clsx(
-                    greedData.priceChange.h24 >= 0
+                    greedData.priceChange.h24 > 0.01
                       ? 'text-success'
-                      : 'text-danger',
+                      : greedData.priceChange.h24 < -0.01
+                        ? 'text-danger'
+                        : 'text-default-500',
                   )}
                 >
                   {greedData.priceChange.h24 ?? 0}%
