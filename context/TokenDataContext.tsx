@@ -8,15 +8,16 @@ import {
 
 import { siteConfig } from '@/config/site';
 
-interface TokenData {
+export interface TokenData {
   priceUsd: number;
   marketCap: number;
-  buys: number;
+  volume24Hr: number;
+  liquidity: number;
   priceChange: {
-    h24: number;
-    h6: number;
-    h1: number;
-    m5: number;
+    h24?: number;
+    h6?: number;
+    h1?: number;
+    m5?: number;
   };
 }
 
@@ -47,7 +48,8 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
   const [fearData, setFearData] = useState<TokenData>({
     priceUsd: 0,
     marketCap: 0,
-    buys: 0,
+    volume24Hr: 0,
+    liquidity: 0,
     priceChange: {
       h24: 0,
       h6: 0,
@@ -58,7 +60,8 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
   const [greedData, setGreedData] = useState<TokenData>({
     priceUsd: 0,
     marketCap: 0,
-    buys: 0,
+    volume24Hr: 0,
+    liquidity: 0,
     priceChange: {
       h24: 0,
       h6: 0,
@@ -71,54 +74,52 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
     const fetchData = async (url: string) => {
       try {
         const response = await fetch(url);
-        const data = await response.json();
 
-        return data.pair;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return await response.json();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_) {
         return null;
       }
     };
 
-    const fetchFearData = async () => {
-      const fearPair = await fetchData(siteConfig.links.fearPair);
+    const fetchTokensData = async () => {
+      const tokensData = await fetchData(
+        `${siteConfig.links.dexscreenerTokens}/${siteConfig.fearToken},${siteConfig.greedToken}`,
+      );
 
-      if (fearPair) {
+      if (tokensData && tokensData.length > 0) {
         setFearData({
-          priceUsd: fearPair.priceUsd,
-          marketCap: fearPair.marketCap,
-          buys: fearPair.txns.h6.buys,
+          priceUsd: tokensData[0].priceUsd ?? 0,
+          marketCap: tokensData[0].marketCap ?? 0,
+          volume24Hr: tokensData[0].volume.h24 ?? 0,
+          liquidity: tokensData[0].liquidity.usd ?? 0,
           priceChange: {
-            h24: fearPair.priceChange.h24,
-            h6: fearPair.priceChange.h6,
-            h1: fearPair.priceChange.h1,
-            m5: fearPair.priceChange.m5,
+            h24: tokensData[0].priceChange.h24 ?? 0,
+            h6: tokensData[0].priceChange.h6 ?? 0,
+            h1: tokensData[0].priceChange.h1 ?? 0,
+            m5: tokensData[0].priceChange.m5 ?? 0,
           },
         });
       }
-    };
 
-    const fetchGreedData = async () => {
-      const greedPair = await fetchData(siteConfig.links.greedPair);
-
-      if (greedPair) {
+      if (tokensData && tokensData.length > 1) {
         setGreedData({
-          priceUsd: greedPair.priceUsd,
-          marketCap: greedPair.marketCap,
-          buys: greedPair.txns.h6.buys,
+          priceUsd: tokensData[1].priceUsd ?? 0,
+          marketCap: tokensData[1].marketCap ?? 0,
+          volume24Hr: tokensData[1].volume.h24 ?? 0,
+          liquidity: tokensData[1].liquidity.usd ?? 0,
           priceChange: {
-            h24: greedPair.priceChange.h24,
-            h6: greedPair.priceChange.h6,
-            h1: greedPair.priceChange.h1,
-            m5: greedPair.priceChange.m5,
+            h24: tokensData[1].priceChange.h24 ?? 0,
+            h6: tokensData[1].priceChange.h6 ?? 0,
+            h1: tokensData[1].priceChange.h1 ?? 0,
+            m5: tokensData[1].priceChange.m5 ?? 0,
           },
         });
       }
     };
 
     const intervalId = setInterval(() => {
-      fetchFearData();
-      fetchGreedData();
+      fetchTokensData();
     }, 1000);
 
     return () => clearInterval(intervalId);

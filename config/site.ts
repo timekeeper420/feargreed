@@ -15,18 +15,13 @@ export const siteConfig = {
   ],
   fearToken: '9L9kmv6qNrjtZR85CHYppzv56UvvFQzmXiiYPxLJpump',
   greedToken: 'DdtbTZmi6sSXCMeSWrMFPJxBeLvb86apEwmdxumcpump',
-  fearPair: 'F7B2p5PXRuAAHRpDsAoneNynRgkCfgh9EjP4oG1FChND',
-  greedPair: 'FDjkhUeXHiGVDsieUyyKjXSnKDdBvtmGrjg4ZZ5QmAAk',
   links: {
     telegram: 'https://t.me/bitcoinfear_chat',
     twitter: 'https://x.com/MemecoinFear',
+    dexscreenerTokens: 'https://api.dexscreener.com/tokens/v1/solana',
     buyFear:
       'https://jup.ag/swap/SOL-9L9kmv6qNrjtZR85CHYppzv56UvvFQzmXiiYPxLJpump',
     buyGreed:
       'https://jup.ag/swap/SOL-DdtbTZmi6sSXCMeSWrMFPJxBeLvb86apEwmdxumcpump',
-    fearPair:
-      'https://api.dexscreener.com/latest/dex/pairs/solana/F7B2p5PXRuAAHRpDsAoneNynRgkCfgh9EjP4oG1FChND',
-    greedPair:
-      'https://api.dexscreener.com/latest/dex/pairs/solana/FDjkhUeXHiGVDsieUyyKjXSnKDdBvtmGrjg4ZZ5QmAAk',
   },
 };

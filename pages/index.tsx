@@ -1,12 +1,11 @@
-import { Card, CardBody, CardFooter, CardHeader } from '@heroui/card';
-import { Code } from '@heroui/code';
-import { Divider } from '@heroui/divider';
-import { Link } from '@heroui/link';
-import { Snippet } from '@heroui/snippet';
-import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+'use client';
 
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+
+import { Gauge } from '@/components/gauge';
 import { subtitle, title } from '@/components/primitives';
+import { TokenCard } from '@/components/token-card';
 import { siteConfig } from '@/config/site';
 import { useTokenData } from '@/context/TokenDataContext';
 import DefaultLayout from '@/layouts/default';
@@ -14,52 +13,23 @@ import DefaultLayout from '@/layouts/default';
 export default function IndexPage() {
   const { fearData, greedData } = useTokenData();
   const [index, setIndex] = useState(0);
-  const needleRef = useRef<HTMLDivElement>(null);
-  const numberRef = useRef<HTMLDivElement>(null);
-
-  /**
-   * Updates the needle's position on the gauge based on the given index.
-   * The needle rotates from 0 to 180 degrees, where 0 represents 0 and 180 represents 100.
-   * The number at the end of the needle displays the index value and changes color based on the index range.
-   *
-   * @param index - The index value, ranging from 0 to 100.
-   */
-  const updateNeedlePosition = (index: number) => {
-    if (!fearData || !greedData) return;
-
-    if (needleRef.current && numberRef.current) {
-      const maxRotation = 180; // Maximum needle rotation (degrees)
-      // Calculate rotation based on index (0-100 maps to 0-180 degrees)
-      const rotation = (index / 100) * maxRotation;
-
-      needleRef.current.style.transform = `rotate(${rotation}deg)`;
-
-      // Position the number at the end of the needle
-      numberRef.current.style.transform = `rotate(-${rotation}deg)`;
-      numberRef.current.textContent = index.toFixed(0);
-      numberRef.current.style.backgroundColor =
-        index > 75
-          ? '#87d85f' // Extreme Greed
-          : index > 50
-            ? '#b9d85a' // Greed
-            : index > 25
-              ? '#daaf5a' // Fear
-              : '#da805a'; // Extreme Fear
-    }
-  };
 
   useEffect(() => {
-    if (numberRef.current) {
-      numberRef.current.textContent = '0';
+    let index = 0;
+
+    if (fearData && greedData) {
+      const absFearChange = Math.abs(fearData.priceChange.h6 ?? 0);
+      const absGreedChange = Math.abs(greedData.priceChange.h6 ?? 0);
+      const totalChange = absFearChange + absGreedChange;
+
+      if (absGreedChange !== 0 && totalChange !== 0) {
+        index = (absGreedChange / totalChange) * 100;
+      } else {
+        index = 0; // Handle case where both changes are zero to avoid NaN
+      }
     }
 
-    if (!fearData || !greedData) return;
-
-    const totalBuyVolume = fearData.buys + greedData.buys;
-    const index = (greedData.buys / totalBuyVolume) * 100;
-
     setIndex(index);
-    updateNeedlePosition(index);
   }, [fearData, greedData]);
 
   return (
@@ -78,7 +48,15 @@ export default function IndexPage() {
             <span
               className={clsx(
                 'text-lg',
-                index > 50 ? 'text-success' : 'text-danger',
+                `text-${
+                  index > 75
+                    ? 'extremeGreed' // Extreme Greed
+                    : index > 50
+                      ? 'greed' // Greed
+                      : index > 25
+                        ? 'fear' // Fear
+                        : 'extremeFear'
+                }`,
               )}
             >
               {index <= 25
@@ -92,261 +70,26 @@ export default function IndexPage() {
           </div>
         </div>
 
-        <div className="mt-8 flex">
-          <div className="gauge">
-            <div className="gaugeCenter" />
-            <div ref={needleRef} className="needle">
-              <div ref={numberRef} className="number">
-                0
-              </div>
-            </div>
-          </div>
+        <div className="mt-10 flex">
+          <Gauge index={index} />
         </div>
 
         <div className="mt-8 flex flex-row flex-wrap gap-4">
-          <Card className="w-full sm:w-fit" shadow="sm">
-            <CardHeader className="flex gap-3">
-              <Snippet
-                hideSymbol
-                classNames={{
-                  base: 'p-0 bg-transparent',
-                }}
-                codeString={siteConfig.fearToken}
-                variant="flat"
-              >
-                <span>
-                  $FEAR:{' '}
-                  <Code
-                    className="hidden bg-danger/50 sm:inline-block"
-                    color="danger"
-                  >
-                    {siteConfig.fearToken}
-                  </Code>
-                  <Code
-                    className="inline-block bg-danger/50 sm:hidden"
-                    color="danger"
-                  >
-                    {siteConfig.fearToken.slice(0, 5)}...
-                    {siteConfig.fearToken.slice(-4)}
-                  </Code>
-                </span>
-              </Snippet>
-            </CardHeader>
-            <Divider />
-            <CardBody>
-              <span className="text-mono text-sm text-default-700">
-                Market Cap:{' '}
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(fearData.marketCap)}
-              </span>
-              <span className="text-mono text-sm text-default-700">
-                Price:{' '}
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                  maximumFractionDigits: 10,
-                }).format(fearData.priceUsd)}
-              </span>
-            </CardBody>
-            <Divider />
-            <CardBody className="flex flex-row justify-between gap-2">
-              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-                <span className="text-mono text-default-700">5m</span>
-                <br />
-                <span
-                  className={clsx(
-                    fearData.priceChange.m5 > 0.01
-                      ? 'text-success'
-                      : fearData.priceChange.m5 < -0.01
-                        ? 'text-danger'
-                        : 'text-default-500',
-                  )}
-                >
-                  {fearData.priceChange.m5 ?? 0}%
-                </span>
-              </span>
-              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-                <span className="text-mono text-default-700">1h</span>
-                <br />
-                <span
-                  className={clsx(
-                    fearData.priceChange.h1 > 0.01
-                      ? 'text-success'
-                      : fearData.priceChange.h1 < -0.01
-                        ? 'text-danger'
-                        : 'text-default-500',
-                  )}
-                >
-                  {fearData.priceChange.h1 ?? 0}%
-                </span>
-              </span>
-              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-                <span className="text-mono text-default-700">6h</span>
-                <br />
-                <span
-                  className={clsx(
-                    fearData.priceChange.h6 > 0.01
-                      ? 'text-success'
-                      : fearData.priceChange.h6 < -0.01
-                        ? 'text-danger'
-                        : 'text-default-500',
-                  )}
-                >
-                  {fearData.priceChange.h6 ?? 0}%
-                </span>
-              </span>
-              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-                <span className="text-mono text-default-700">24h</span>
-                <br />
-                <span
-                  className={clsx(
-                    fearData.priceChange.h24 > 0.01
-                      ? 'text-success'
-                      : fearData.priceChange.h24 < -0.01
-                        ? 'text-danger'
-                        : 'text-default-500',
-                  )}
-                >
-                  {fearData.priceChange.h24 ?? 0}%
-                </span>
-              </span>
-            </CardBody>
-            <Divider />
-            <CardFooter className="flex justify-end">
-              <Link
-                isExternal
-                showAnchorIcon
-                className="text-sm text-danger"
-                href={siteConfig.links.buyFear}
-              >
-                Buy $FEAR
-              </Link>
-            </CardFooter>
-          </Card>
+          <TokenCard
+            buyLink={siteConfig.links.buyFear}
+            color="danger"
+            tokenAddress={siteConfig.fearToken}
+            tokenData={fearData}
+            tokenName="$FEAR"
+          />
 
-          <Card className="w-full sm:w-fit" shadow="sm">
-            <CardHeader className="flex gap-3">
-              <Snippet
-                hideSymbol
-                classNames={{
-                  base: 'p-0 bg-transparent',
-                }}
-                codeString={siteConfig.greedToken}
-                variant="flat"
-              >
-                <span>
-                  $GREED:{' '}
-                  <Code
-                    className="hidden bg-success/50 sm:inline-block"
-                    color="success"
-                  >
-                    {siteConfig.greedToken}
-                  </Code>
-                  <Code
-                    className="inline-block bg-success/50 sm:hidden"
-                    color="success"
-                  >
-                    {siteConfig.greedToken.slice(0, 5)}...
-                    {siteConfig.greedToken.slice(-4)}
-                  </Code>
-                </span>
-              </Snippet>
-            </CardHeader>
-            <Divider />
-            <CardBody>
-              <span className="text-mono text-sm text-default-700">
-                Market Cap:{' '}
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(greedData.marketCap)}
-              </span>
-              <span className="text-mono text-sm text-default-700">
-                Price:{' '}
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                  maximumFractionDigits: 10,
-                }).format(greedData.priceUsd)}
-              </span>
-            </CardBody>
-            <Divider />
-            <CardBody className="flex flex-row justify-between gap-2">
-              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-                <span className="text-mono text-default-700">5m</span>
-                <br />
-                <span
-                  className={clsx(
-                    greedData.priceChange.m5 > 0.01
-                      ? 'text-success'
-                      : greedData.priceChange.m5 < -0.01
-                        ? 'text-danger'
-                        : 'text-default-500',
-                  )}
-                >
-                  {greedData.priceChange.m5 ?? 0}%
-                </span>
-              </span>
-              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-                <span className="text-mono text-default-700">1h</span>
-                <br />
-                <span
-                  className={clsx(
-                    greedData.priceChange.h1 > 0.01
-                      ? 'text-success'
-                      : greedData.priceChange.h1 < -0.01
-                        ? 'text-danger'
-                        : 'text-default-500',
-                  )}
-                >
-                  {greedData.priceChange.h1 ?? 0}%
-                </span>
-              </span>
-              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-                <span className="text-mono text-default-700">6h</span>
-                <br />
-                <span
-                  className={clsx(
-                    greedData.priceChange.h6 > 0.01
-                      ? 'text-success'
-                      : greedData.priceChange.h6 < -0.01
-                        ? 'text-danger'
-                        : 'text-default-500',
-                  )}
-                >
-                  {greedData.priceChange.h6 ?? 0}%
-                </span>
-              </span>
-              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-                <span className="text-mono text-default-700">24h</span>
-                <br />
-                <span
-                  className={clsx(
-                    greedData.priceChange.h24 > 0.01
-                      ? 'text-success'
-                      : greedData.priceChange.h24 < -0.01
-                        ? 'text-danger'
-                        : 'text-default-500',
-                  )}
-                >
-                  {greedData.priceChange.h24 ?? 0}%
-                </span>
-              </span>
-            </CardBody>
-            <Divider />
-            <CardFooter className="flex justify-end">
-              <Link
-                isExternal
-                showAnchorIcon
-                className="text-sm text-success"
-                href={siteConfig.links.buyGreed}
-              >
-                Buy $GREED
-              </Link>
-            </CardFooter>
-          </Card>
+          <TokenCard
+            buyLink={siteConfig.links.buyGreed}
+            color="success"
+            tokenAddress={siteConfig.greedToken}
+            tokenData={greedData}
+            tokenName="$GREED"
+          />
         </div>
       </div>
     </DefaultLayout>

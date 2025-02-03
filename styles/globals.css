@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --extremeGreed: #87d85f;
+  --greed: #b9d85a;
+  --fear: #daaf5a;
+  --extremeFear: #da805a;
+}
+
 .gauge {
-  background: linear-gradient(to right, #da805a, #daaf5a, #b9d85a, #87d85f);
+  background: linear-gradient(to right, var(--extremeFear), var(--fear), var(--greed), var(--extremeGreed));
   width: 320px;
   height: 160px;
   border-radius: 160px 160px 0 0;
@@ -51,12 +58,12 @@
 
 .number {
   position: absolute;
-  top: -11px;
+  top: -12px;
   left: -50px;
   transform-origin: center;
   font-size: 16px;
   border-radius: 100%;
-  background: #15222e;
+  background: hsl(var(--danger));
   color: #fff;
   padding: 4px;
   width: 34px;
