@@ -162,7 +162,7 @@ export default function IndexPage() {
                       : 'text-danger',
                   )}
                 >
-                  {fearData.priceChange.m5}%
+                  {fearData.priceChange.m5 ?? 0}%
                 </span>
               </span>
               <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
@@ -175,7 +175,7 @@ export default function IndexPage() {
                       : 'text-danger',
                   )}
                 >
-                  {fearData.priceChange.h1}%
+                  {fearData.priceChange.h1 ?? 0}%
                 </span>
               </span>
               <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
@@ -188,7 +188,7 @@ export default function IndexPage() {
                       : 'text-danger',
                   )}
                 >
-                  {fearData.priceChange.h6}%
+                  {fearData.priceChange.h6 ?? 0}%
                 </span>
               </span>
               <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
@@ -201,7 +201,7 @@ export default function IndexPage() {
                       : 'text-danger',
                   )}
                 >
-                  {fearData.priceChange.h24}%
+                  {fearData.priceChange.h24 ?? 0}%
                 </span>
               </span>
             </CardBody>
@@ -276,7 +276,7 @@ export default function IndexPage() {
                       : 'text-danger',
                   )}
                 >
-                  {greedData.priceChange.m5}%
+                  {greedData.priceChange.m5 ?? 0}%
                 </span>
               </span>
               <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
@@ -289,7 +289,7 @@ export default function IndexPage() {
                       : 'text-danger',
                   )}
                 >
-                  {greedData.priceChange.h1}%
+                  {greedData.priceChange.h1 ?? 0}%
                 </span>
               </span>
               <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
@@ -302,7 +302,7 @@ export default function IndexPage() {
                       : 'text-danger',
                   )}
                 >
-                  {greedData.priceChange.h6}%
+                  {greedData.priceChange.h6 ?? 0}%
                 </span>
               </span>
               <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
@@ -315,7 +315,7 @@ export default function IndexPage() {
                       : 'text-danger',
                   )}
                 >
-                  {greedData.priceChange.h24}%
+                  {greedData.priceChange.h24 ?? 0}%
                 </span>
               </span>
             </CardBody>

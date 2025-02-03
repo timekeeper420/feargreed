@@ -54,10 +54,10 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         ),
       })}
     >
-      <VisuallyHidden>
+      <VisuallyHidden elementType="span">
         <input {...getInputProps()} />
       </VisuallyHidden>
-      <div
+      <span
         {...getWrapperProps()}
         className={slots.wrapper({
           class: clsx(
@@ -81,7 +81,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         ) : (
           <SunFilledIcon size={22} />
         )}
-      </div>
+      </span>
     </Component>
   );
 };

@@ -116,8 +116,12 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
       }
     };
 
-    fetchFearData();
-    fetchGreedData();
+    const intervalId = setInterval(() => {
+      fetchFearData();
+      fetchGreedData();
+    }, 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
