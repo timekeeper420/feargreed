@@ -22,14 +22,14 @@ module.exports = {
       themes: {
         light: {
           colors: {
-            success: '#1eaa59',
-            danger: '#e84c3d',
+            success: '#87d85f',
+            danger: '#da805a',
           },
         },
         dark: {
           colors: {
-            success: '#1eaa59',
-            danger: '#e84c3d',
+            success: '#87d85f',
+            danger: '#da805a',
           },
         },
       },

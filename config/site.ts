@@ -13,6 +13,10 @@ export const siteConfig = {
       href: 'https://jup.ag/swap/SOL-DdtbTZmi6sSXCMeSWrMFPJxBeLvb86apEwmdxumcpump',
     },
   ],
+  fearToken: 'F7B2p5PXRuAAHRpDsAoneNynRgkCfgh9EjP4oG1FChND',
+  greedToken: 'FDjkhUeXHiGVDsieUyyKjXSnKDdBvtmGrjg4ZZ5QmAAk',
+  fearPair: 'F7B2p5PXRuAAHRpDsAoneNynRgkCfgh9EjP4oG1FChND',
+  greedPair: 'FDjkhUeXHiGVDsieUyyKjXSnKDdBvtmGrjg4ZZ5QmAAk',
   links: {
     telegram: 'https://t.me/bitcoinfear_chat',
     twitter: 'https://x.com/MemecoinFear',

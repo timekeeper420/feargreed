@@ -4,8 +4,8 @@ export const title = tv({
   base: 'tracking-tight inline font-semibold',
   variants: {
     color: {
-      green: 'from-[#8dd5a7] to-[#1eaa59]',
-      red: 'from-[#ffb5f0] to-[#e84c3d]',
+      green: 'from-[#b9d85a] to-[#87d85f]',
+      red: 'from-[#daaf5a] to-[#da805a]',
       foreground: 'dark:from-[#FFFFFF] dark:to-[#4B4B4B]',
     },
     size: {

@@ -1,9 +1,13 @@
+import { Card, CardBody, CardFooter, CardHeader } from '@heroui/card';
 import { Code } from '@heroui/code';
+import { Divider } from '@heroui/divider';
+import { Link } from '@heroui/link';
 import { Snippet } from '@heroui/snippet';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 
 import { subtitle, title } from '@/components/primitives';
+import { siteConfig } from '@/config/site';
 import { useTokenData } from '@/context/TokenDataContext';
 import DefaultLayout from '@/layouts/default';
 
@@ -21,6 +25,8 @@ export default function IndexPage() {
    * @param index - The index value, ranging from 0 to 100.
    */
   const updateNeedlePosition = (index: number) => {
+    if (!fearData || !greedData) return;
+
     if (needleRef.current && numberRef.current) {
       const maxRotation = 180; // Maximum needle rotation (degrees)
       // Calculate rotation based on index (0-100 maps to 0-180 degrees)
@@ -33,19 +39,24 @@ export default function IndexPage() {
       numberRef.current.textContent = index.toFixed(0);
       numberRef.current.style.backgroundColor =
         index > 75
-          ? '#1eaa59' // Extreme Greed
+          ? '#87d85f' // Extreme Greed
           : index > 50
-            ? '#9baa1e' // Greed
+            ? '#b9d85a' // Greed
             : index > 25
-              ? '#f1c40f' // Fear
-              : '#e84c3d'; // Extreme Fear
+              ? '#daaf5a' // Fear
+              : '#da805a'; // Extreme Fear
     }
   };
 
   useEffect(() => {
-    const totalMarketCap = fearData.marketCap + greedData.marketCap;
-    const greedMarketCap = greedData.marketCap;
-    const index = (greedMarketCap / totalMarketCap) * 100;
+    if (numberRef.current) {
+      numberRef.current.textContent = '0';
+    }
+
+    if (!fearData || !greedData) return;
+
+    const totalBuyVolume = fearData.buys + greedData.buys;
+    const index = (greedData.buys / totalBuyVolume) * 100;
 
     setIndex(index);
     updateNeedlePosition(index);
@@ -53,15 +64,14 @@ export default function IndexPage() {
 
   return (
     <DefaultLayout>
-      <section className="flex h-full w-full flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <div className="flex w-full flex-col items-center justify-center gap-4">
         <div className="flex w-full flex-wrap justify-center text-center">
-          <span className={title()}>The&nbsp;</span>
           <span className={title({ color: 'red' })}>$FEAR&nbsp;</span>
           <span className={title()}>and&nbsp;</span>
           <span className={title({ color: 'green' })}>$GREED&nbsp;</span>
-          <span className={title()}>index</span>
+          <span className={title()}>Index</span>
           <div className={subtitle({ class: 'mt-4' })}>
-            Track the dominance of $FEAR and $GREED.
+            Multifactorial Memecoin Market Sentiment Analysis
           </div>
           <div className="inline-block w-full justify-center text-center">
             <span className="text-lg">Now:&nbsp;</span>
@@ -71,54 +81,258 @@ export default function IndexPage() {
                 index > 50 ? 'text-success' : 'text-danger',
               )}
             >
-              {index > 50 ? '$GREED' : '$FEAR'}
+              {index <= 25
+                ? 'Extreme $FEAR'
+                : index <= 50
+                  ? '$FEAR'
+                  : index <= 75
+                    ? '$GREED'
+                    : 'Extreme $GREED'}
             </span>
           </div>
         </div>
 
         <div className="mt-8 flex">
           <div className="gauge">
-            <div className="sliceColors" />
             <div className="gaugeCenter" />
             <div ref={needleRef} className="needle">
-              <div ref={numberRef} className="number" />
+              <div ref={numberRef} className="number">
+                0
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col gap-4">
-          <Snippet
-            hideSymbol
-            codeString="9L9kmv6qNrjtZR85CHYppzv56UvvFQzmXiiYPxLJpump"
-            variant="bordered"
-          >
-            <span>
-              $FEAR:{' '}
-              <Code className="bg-danger/50 hidden sm:inline-block" color="danger">
-              9L9kmv6qNrjtZR85CHYppzv56UvvFQzmXiiYPxLJpump
-              </Code>
-              <Code className="bg-danger/50 inline-block sm:hidden" color="danger">
-                9L9km...pump
-              </Code>
-            </span>
-          </Snippet>
-          <Snippet
-            hideSymbol
-            codeString="FDjkhUeXHiGVDsieUyyKjXSnKDdBvtmGrjg4ZZ5QmAAk"
-            variant="bordered"
-          >
-            <span>
-              $GREED:{' '}
-              <Code className="bg-success/50 hidden sm:inline-block" color="success">
-                FDjkhUeXHiGVDsieUyyKjXSnKDdBvtmGrjg4ZZ5QmAAk
-              </Code>
-              <Code className="bg-success/50 inline-block sm:hidden" color="success">
-                DdtbT...pump
-              </Code>
-            </span>
-          </Snippet>
+        <div className="mt-8 flex flex-row flex-wrap gap-4">
+          <Card className="w-full sm:w-fit" shadow="sm">
+            <CardHeader className="flex gap-3">
+              <Snippet
+                hideSymbol
+                classNames={{
+                  base: 'p-0 bg-transparent',
+                }}
+                codeString={siteConfig.fearToken}
+                variant="flat"
+              >
+                <span>
+                  $FEAR:{' '}
+                  <Code
+                    className="hidden bg-danger/50 sm:inline-block"
+                    color="danger"
+                  >
+                    {siteConfig.fearToken}
+                  </Code>
+                  <Code
+                    className="inline-block bg-danger/50 sm:hidden"
+                    color="danger"
+                  >
+                    {siteConfig.fearToken.slice(0, 5)}...
+                    {siteConfig.fearToken.slice(-4)}
+                  </Code>
+                </span>
+              </Snippet>
+            </CardHeader>
+            <Divider />
+            <CardBody>
+              <span className="text-mono text-sm text-default-700">
+                Market Cap:{' '}
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(fearData.marketCap)}
+              </span>
+              <span className="text-mono text-sm text-default-700">
+                Price:{' '}
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  maximumFractionDigits: 10,
+                }).format(fearData.priceUsd)}
+              </span>
+            </CardBody>
+            <Divider />
+            <CardBody className="flex flex-row justify-between gap-2">
+              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+                <span className="text-mono text-default-700">5m</span>
+                <br />
+                <span
+                  className={clsx(
+                    fearData.priceChange.m5 >= 0
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
+                  {fearData.priceChange.m5}%
+                </span>
+              </span>
+              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+                <span className="text-mono text-default-700">1h</span>
+                <br />
+                <span
+                  className={clsx(
+                    fearData.priceChange.h1 >= 0
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
+                  {fearData.priceChange.h1}%
+                </span>
+              </span>
+              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+                <span className="text-mono text-default-700">6h</span>
+                <br />
+                <span
+                  className={clsx(
+                    fearData.priceChange.h6 >= 0
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
+                  {fearData.priceChange.h6}%
+                </span>
+              </span>
+              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+                <span className="text-mono text-default-700">24h</span>
+                <br />
+                <span
+                  className={clsx(
+                    fearData.priceChange.h24 >= 0
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
+                  {fearData.priceChange.h24}%
+                </span>
+              </span>
+            </CardBody>
+            <Divider />
+            <CardFooter className="flex justify-end">
+              <Link
+                isExternal
+                showAnchorIcon
+                className="text-sm text-danger"
+                href={siteConfig.links.buyFear}
+              >
+                Buy $FEAR
+              </Link>
+            </CardFooter>
+          </Card>
+
+          <Card className="w-full sm:w-fit" shadow="sm">
+            <CardHeader className="flex gap-3">
+              <Snippet
+                hideSymbol
+                classNames={{
+                  base: 'p-0 bg-transparent',
+                }}
+                codeString={siteConfig.greedToken}
+                variant="flat"
+              >
+                <span>
+                  $GREED:{' '}
+                  <Code
+                    className="hidden bg-success/50 sm:inline-block"
+                    color="success"
+                  >
+                    {siteConfig.greedToken}
+                  </Code>
+                  <Code
+                    className="inline-block bg-success/50 sm:hidden"
+                    color="success"
+                  >
+                    {siteConfig.greedToken.slice(0, 5)}...
+                    {siteConfig.greedToken.slice(-4)}
+                  </Code>
+                </span>
+              </Snippet>
+            </CardHeader>
+            <Divider />
+            <CardBody>
+              <span className="text-mono text-sm text-default-700">
+                Market Cap:{' '}
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(greedData.marketCap)}
+              </span>
+              <span className="text-mono text-sm text-default-700">
+                Price:{' '}
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  maximumFractionDigits: 10,
+                }).format(greedData.priceUsd)}
+              </span>
+            </CardBody>
+            <Divider />
+            <CardBody className="flex flex-row justify-between gap-2">
+              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+                <span className="text-mono text-default-700">5m</span>
+                <br />
+                <span
+                  className={clsx(
+                    greedData.priceChange.m5 >= 0
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
+                  {greedData.priceChange.m5}%
+                </span>
+              </span>
+              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+                <span className="text-mono text-default-700">1h</span>
+                <br />
+                <span
+                  className={clsx(
+                    greedData.priceChange.h1 >= 0
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
+                  {greedData.priceChange.h1}%
+                </span>
+              </span>
+              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+                <span className="text-mono text-default-700">6h</span>
+                <br />
+                <span
+                  className={clsx(
+                    greedData.priceChange.h6 >= 0
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
+                  {greedData.priceChange.h6}%
+                </span>
+              </span>
+              <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+                <span className="text-mono text-default-700">24h</span>
+                <br />
+                <span
+                  className={clsx(
+                    greedData.priceChange.h24 >= 0
+                      ? 'text-success'
+                      : 'text-danger',
+                  )}
+                >
+                  {greedData.priceChange.h24}%
+                </span>
+              </span>
+            </CardBody>
+            <Divider />
+            <CardFooter className="flex justify-end">
+              <Link
+                isExternal
+                showAnchorIcon
+                className="text-sm text-success"
+                href={siteConfig.links.buyGreed}
+              >
+                Buy $GREED
+              </Link>
+            </CardFooter>
+          </Card>
         </div>
-      </section>
+      </div>
     </DefaultLayout>
   );
 }

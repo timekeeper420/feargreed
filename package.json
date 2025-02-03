@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@heroui/button": "2.2.9",
+    "@heroui/card": "^2.2.10",
     "@heroui/code": "2.2.6",
+    "@heroui/divider": "^2.2.6",
     "@heroui/input": "2.4.9",
     "@heroui/kbd": "2.2.6",
     "@heroui/link": "2.2.7",
@@ -21,6 +23,8 @@
     "@heroui/system": "2.4.6",
     "@heroui/theme": "2.4.5",
     "@react-aria/visually-hidden": "3.8.18",
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0",
     "clsx": "2.1.1",
     "framer-motion": "11.13.1",
     "intl-messageformat": "^10.5.0",
