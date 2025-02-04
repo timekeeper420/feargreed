@@ -1,10 +1,13 @@
 import {
   ReactNode,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
 } from 'react';
+
+import { siteConfig } from '@/config/site';
 
 export interface TokenData {
   priceUsd: number;
@@ -144,25 +147,115 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [fetching, setFetching] = useState<boolean>(false);
 
+  const calculateIndex = useCallback(
+    (fearData: TokenData, greedData: TokenData): number => {
+      // Calculate the Approximate Value of Buys for FEAR (6 hours):
+      const fearBuysH6 = fearData.txns.h6?.buys ?? 0;
+      const fearSellsH6 = fearData.txns.h6?.sells ?? 0;
+      const fearVolumeH6 = fearData.volume.h6 ?? 0;
+
+      if (
+        fearBuysH6 === null ||
+        fearSellsH6 === null ||
+        fearVolumeH6 === null
+      ) {
+        return 0; // Handle cases where data is missing
+      }
+
+      const fearTotalTransactionsH6 = fearBuysH6 + fearSellsH6;
+      const fearValueBuysH6 =
+        fearTotalTransactionsH6 === 0
+          ? 0
+          : (fearBuysH6 / fearTotalTransactionsH6) * fearVolumeH6;
+
+      // Calculate the Approximate Value of Buys for GREED (6 hours):
+      const greedBuysH6 = greedData.txns.h6?.buys ?? 0;
+      const greedSellsH6 = greedData.txns.h6?.sells ?? 0;
+      const greedVolumeH6 = greedData.volume.h6 ?? 0;
+
+      if (
+        greedBuysH6 === null ||
+        greedSellsH6 === null ||
+        greedVolumeH6 === null
+      ) {
+        return 0; // Handle cases where data is missing
+      }
+
+      const greedTotalTransactionsH6 = greedBuysH6 + greedSellsH6;
+      const greedValueBuysH6 =
+        greedTotalTransactionsH6 === 0
+          ? 0
+          : (greedBuysH6 / greedTotalTransactionsH6) * greedVolumeH6;
+
+      // Calculate the Index:
+      const totalValueBuysH6 = fearValueBuysH6 + greedValueBuysH6;
+
+      if (totalValueBuysH6 === 0) {
+        return 0; // Avoid division by zero if no buys for both tokens
+      }
+
+      const indexH6 = (greedValueBuysH6 / totalValueBuysH6) * 100;
+
+      return indexH6;
+    },
+    [],
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('fetching', fetching);
         if (fetching) return;
+
         setFetching(true);
-        const response = await fetch('/api/data');
-        const jsonData = await response.json();
 
-        if (jsonData && jsonData.fearData) {
-          setFearData(jsonData.fearData);
+        const response = await fetch(
+          `${siteConfig.links.dexscreenerTokens}/${siteConfig.fearToken},${siteConfig.greedToken}`,
+        );
+
+        const tokensData = await response.json();
+
+        const fearTokenData: TokenData = tokensData &&
+          tokensData.length > 0 && {
+            priceUsd: tokensData[0].priceUsd ?? 0,
+            marketCap: tokensData[0].marketCap ?? 0,
+            volume24Hr: tokensData[0].volume.h24 ?? 0,
+            liquidity: tokensData[0].liquidity.usd ?? 0,
+            priceChange: {
+              h24: tokensData[0].priceChange.h24 ?? 0,
+              h6: tokensData[0].priceChange.h6 ?? 0,
+              h1: tokensData[0].priceChange.h1 ?? 0,
+              m5: tokensData[0].priceChange.m5 ?? 0,
+            },
+            txns: tokensData[0].txns,
+            volume: tokensData[0].volume,
+          };
+
+        const greedTokenData: TokenData = tokensData &&
+          tokensData.length > 1 && {
+            priceUsd: tokensData[1].priceUsd ?? 0,
+            marketCap: tokensData[1].marketCap ?? 0,
+            volume24Hr: tokensData[1].volume.h24 ?? 0,
+            liquidity: tokensData[1].liquidity.usd ?? 0,
+            priceChange: {
+              h24: tokensData[1].priceChange.h24 ?? 0,
+              h6: tokensData[1].priceChange.h6 ?? 0,
+              h1: tokensData[1].priceChange.h1 ?? 0,
+              m5: tokensData[1].priceChange.m5 ?? 0,
+            },
+            txns: tokensData[1].txns,
+            volume: tokensData[1].volume,
+          };
+
+        if (fearTokenData) {
+          setFearData(fearTokenData);
         }
 
-        if (jsonData && jsonData.greedData) {
-          setGreedData(jsonData.greedData);
+        if (greedTokenData) {
+          setGreedData(greedTokenData);
         }
 
-        if (jsonData && jsonData.index) {
-          setIndex(jsonData.index);
+        if (fearTokenData && greedTokenData) {
+          setIndex(calculateIndex(fearTokenData, greedTokenData));
         }
       } catch (error) {
         console.error('Error fetching data:', error);

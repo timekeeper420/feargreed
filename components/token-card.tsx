@@ -40,162 +40,159 @@ export const TokenCard = ({
   tokenAddress,
   buyLink,
   color,
-}: TokenCardProps) => {
-    return (
-      <Card className="w-full sm:w-fit" shadow="sm">
-        <CardHeader className="flex gap-3">
-          <Snippet
-            hideSymbol
-            classNames={{
-              base: 'p-0 bg-transparent',
-            }}
-            codeString={tokenAddress}
-            variant="flat"
+}: TokenCardProps) => (
+  <Card className="w-full sm:w-fit" shadow="sm">
+    <CardHeader className="flex gap-3">
+      <Snippet
+        hideSymbol
+        classNames={{
+          base: 'p-0 bg-transparent',
+        }}
+        codeString={tokenAddress}
+        variant="flat"
+      >
+        <span>
+          {tokenName}:{' '}
+          <Code
+            className={`hidden bg-${color}/50 sm:inline-block`}
+            color={color}
           >
-            <span>
-              {tokenName}:{' '}
-              <Code
-                className={`hidden bg-${color}/50 sm:inline-block`}
-                color={color}
-              >
-                {tokenAddress}
-              </Code>
-              <Code
-                className={`inline-block bg-${color}/50 sm:hidden`}
-                color={color}
-              >
-                {tokenAddress.slice(0, 5)}...{tokenAddress.slice(-4)}
-              </Code>
-            </span>
-          </Snippet>
-        </CardHeader>
-        <Divider />
-        <CardBody className="flex flex-row items-center justify-between gap-2">
-          <span className="text-mono text-center text-sm">
-            <span className="text-default-500">Mkt Cap</span>
-            <br />
-            <span className="font-bold text-default-700">
-              {new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              }).format(tokenData.marketCap ?? 0)}
-            </span>
-          </span>
-          <span className="text-mono text-center text-sm">
-            <span className="text-default-500">Price</span>
-            <br />
-            <span className="font-bold text-default-700">
-              {new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                maximumFractionDigits: 10,
-              }).format(tokenData.priceUsd ?? 0)}
-            </span>
-          </span>
-
-          <span className="text-mono text-center text-sm">
-            <span className="text-default-500">24h Vol</span>
-            <br />
-            <span className="font-bold text-default-700">
-              {new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                maximumFractionDigits: 10,
-              }).format(tokenData.volume24Hr ?? 0)}
-            </span>
-          </span>
-
-          <span className="text-mono text-center text-sm">
-            <span className="text-default-500">Liq</span>
-            <br />
-            <span className="font-bold text-default-700">
-              {new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                maximumFractionDigits: 10,
-              }).format(tokenData.liquidity ?? 0)}
-            </span>
-          </span>
-        </CardBody>
-        <Divider />
-        <CardBody className="flex flex-row justify-between gap-2">
-          <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-            <span className="text-default-500">5m</span>
-            <br />
-            <span
-              className={clsx(
-                'font-bold',
-                tokenData.priceChange.m5 && tokenData.priceChange.m5 > 0.01
-                  ? 'text-success'
-                  : tokenData.priceChange.m5 && tokenData.priceChange.m5 < -0.01
-                    ? 'text-danger'
-                    : 'text-default-700'
-              )}
-            >
-              <Counter decimalPlaces={2} value={tokenData.priceChange.m5 ?? 0} />%
-            </span>
-          </span>
-          <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-
-            <span className="text-default-500">1h</span>
-            <br />
-            <span
-              className={clsx(
-                'font-bold',
-                tokenData.priceChange.h1 && tokenData.priceChange.h1 > 0.01
-                  ? 'text-success'
-                  : tokenData.priceChange.h1 && tokenData.priceChange.h1 < -0.01
-                    ? 'text-danger'
-                    : 'text-default-700'
-              )}
-            >
-              <Counter decimalPlaces={2} value={tokenData.priceChange.h1 ?? 0} />%
-            </span>
-          </span>
-          <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-            <span className="text-default-500">6h</span>
-            <br />
-            <span
-              className={clsx(
-                'font-bold',
-                tokenData.priceChange.h6 && tokenData.priceChange.h6 > 0.01
-                  ? 'text-success'
-                  : tokenData.priceChange.h6 && tokenData.priceChange.h6 < -0.01
-                    ? 'text-danger'
-                    : 'text-default-700'
-              )}
-            >
-              <Counter decimalPlaces={2} value={tokenData.priceChange.h6 ?? 0} />%
-            </span>
-          </span>
-          <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
-            <span className="text-default-500">24h</span>
-            <br />
-            <span
-              className={clsx(
-                'font-bold',
-                tokenData.priceChange.h24 && tokenData.priceChange.h24 > 0.01
-                  ? 'text-success'
-                  : tokenData.priceChange.h24 && tokenData.priceChange.h24 < -0.01
-                    ? 'text-danger'
-                    : 'text-default-700'
-              )}
-            >
-              <Counter decimalPlaces={2} value={tokenData.priceChange.h24 ?? 0} />%
-            </span>
-          </span>
-        </CardBody>
-        <Divider />
-        <CardFooter className="flex justify-end">
-          <Link
-            isExternal
-            showAnchorIcon
-            className={`text-sm text-${color}`}
-            href={buyLink}
+            {tokenAddress}
+          </Code>
+          <Code
+            className={`inline-block bg-${color}/50 sm:hidden`}
+            color={color}
           >
-            Buy {tokenName}
-          </Link>
-        </CardFooter>
-      </Card>
-    );
-  };
+            {tokenAddress.slice(0, 5)}...{tokenAddress.slice(-4)}
+          </Code>
+        </span>
+      </Snippet>
+    </CardHeader>
+    <Divider />
+    <CardBody className="flex flex-row items-center justify-between gap-2">
+      <span className="text-mono text-center text-sm">
+        <span className="text-default-500">Mkt Cap</span>
+        <br />
+        <span className="font-bold text-default-700">
+          {new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }).format(tokenData.marketCap ?? 0)}
+        </span>
+      </span>
+      <span className="text-mono text-center text-sm">
+        <span className="text-default-500">Price</span>
+        <br />
+        <span className="font-bold text-default-700">
+          {new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 10,
+          }).format(tokenData.priceUsd ?? 0)}
+        </span>
+      </span>
+
+      <span className="text-mono text-center text-sm">
+        <span className="text-default-500">24h Vol</span>
+        <br />
+        <span className="font-bold text-default-700">
+          {new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 10,
+          }).format(tokenData.volume24Hr ?? 0)}
+        </span>
+      </span>
+
+      <span className="text-mono text-center text-sm">
+        <span className="text-default-500">Liq</span>
+        <br />
+        <span className="font-bold text-default-700">
+          {new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 10,
+          }).format(tokenData.liquidity ?? 0)}
+        </span>
+      </span>
+    </CardBody>
+    <Divider />
+    <CardBody className="flex flex-row justify-between gap-2">
+      <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+        <span className="text-default-500">5m</span>
+        <br />
+        <span
+          className={clsx(
+            'font-bold',
+            tokenData.priceChange.m5 && tokenData.priceChange.m5 > 0.01
+              ? 'text-success'
+              : tokenData.priceChange.m5 && tokenData.priceChange.m5 < -0.01
+                ? 'text-danger'
+                : 'text-default-700',
+          )}
+        >
+          <Counter decimalPlaces={2} value={tokenData.priceChange.m5 ?? 0} />%
+        </span>
+      </span>
+      <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+        <span className="text-default-500">1h</span>
+        <br />
+        <span
+          className={clsx(
+            'font-bold',
+            tokenData.priceChange.h1 && tokenData.priceChange.h1 > 0.01
+              ? 'text-success'
+              : tokenData.priceChange.h1 && tokenData.priceChange.h1 < -0.01
+                ? 'text-danger'
+                : 'text-default-700',
+          )}
+        >
+          <Counter decimalPlaces={2} value={tokenData.priceChange.h1 ?? 0} />%
+        </span>
+      </span>
+      <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+        <span className="text-default-500">6h</span>
+        <br />
+        <span
+          className={clsx(
+            'font-bold',
+            tokenData.priceChange.h6 && tokenData.priceChange.h6 > 0.01
+              ? 'text-success'
+              : tokenData.priceChange.h6 && tokenData.priceChange.h6 < -0.01
+                ? 'text-danger'
+                : 'text-default-700',
+          )}
+        >
+          <Counter decimalPlaces={2} value={tokenData.priceChange.h6 ?? 0} />%
+        </span>
+      </span>
+      <span className="text-mono flex-1 border-r border-divider text-center text-sm text-default-700 last:border-r-0">
+        <span className="text-default-500">24h</span>
+        <br />
+        <span
+          className={clsx(
+            'font-bold',
+            tokenData.priceChange.h24 && tokenData.priceChange.h24 > 0.01
+              ? 'text-success'
+              : tokenData.priceChange.h24 && tokenData.priceChange.h24 < -0.01
+                ? 'text-danger'
+                : 'text-default-700',
+          )}
+        >
+          <Counter decimalPlaces={2} value={tokenData.priceChange.h24 ?? 0} />%
+        </span>
+      </span>
+    </CardBody>
+    <Divider />
+    <CardFooter className="flex justify-end">
+      <Link
+        isExternal
+        showAnchorIcon
+        className={`text-sm text-${color}`}
+        href={buyLink}
+      >
+        Buy {tokenName}
+      </Link>
+    </CardFooter>
+  </Card>
+);
