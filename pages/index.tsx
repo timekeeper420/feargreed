@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
 
 import { Gauge } from '@/components/gauge';
 import { subtitle, title } from '@/components/primitives';
@@ -11,26 +10,7 @@ import { useTokenData } from '@/context/TokenDataContext';
 import DefaultLayout from '@/layouts/default';
 
 export default function IndexPage() {
-  const { fearData, greedData } = useTokenData();
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    let index = 0;
-
-    if (fearData && greedData) {
-      const absFearChange = Math.abs(fearData.priceChange.h6 ?? 0);
-      const absGreedChange = Math.abs(greedData.priceChange.h6 ?? 0);
-      const totalChange = absFearChange + absGreedChange;
-
-      if (absGreedChange !== 0 && totalChange !== 0) {
-        index = (absGreedChange / totalChange) * 100;
-      } else {
-        index = 0; // Handle case where both changes are zero to avoid NaN
-      }
-    }
-
-    setIndex(index);
-  }, [fearData, greedData]);
+  const { fearData, greedData, index } = useTokenData();
 
   return (
     <DefaultLayout>

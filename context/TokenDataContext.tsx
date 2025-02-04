@@ -6,8 +6,6 @@ import {
   useState,
 } from 'react';
 
-import { siteConfig } from '@/config/site';
-
 export interface TokenData {
   priceUsd: number;
   marketCap: number;
@@ -19,11 +17,36 @@ export interface TokenData {
     h1?: number;
     m5?: number;
   };
+  txns: {
+    h24?: {
+      buys: number;
+      sells: number;
+    };
+    h6?: {
+      buys: number;
+      sells: number;
+    };
+    h1?: {
+      buys: number;
+      sells: number;
+    };
+    m5?: {
+      buys: number;
+      sells: number;
+    };
+  };
+  volume: {
+    h24: number;
+    h6: number;
+    h1: number;
+    m5: number;
+  };
 }
 
 interface TokenDataContextType {
   fearData: TokenData;
   greedData: TokenData;
+  index: number;
 }
 
 const TokenDataContext = createContext<TokenDataContextType | undefined>(
@@ -56,6 +79,30 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
       h1: 0,
       m5: 0,
     },
+    txns: {
+      h24: {
+        buys: 0,
+        sells: 0,
+      },
+      h6: {
+        buys: 0,
+        sells: 0,
+      },
+      h1: {
+        buys: 0,
+        sells: 0,
+      },
+      m5: {
+        buys: 0,
+        sells: 0,
+      },
+    },
+    volume: {
+      h24: 0,
+      h6: 0,
+      h1: 0,
+      m5: 0,
+    },
   });
   const [greedData, setGreedData] = useState<TokenData>({
     priceUsd: 0,
@@ -68,66 +115,74 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
       h1: 0,
       m5: 0,
     },
+    txns: {
+      h24: {
+        buys: 0,
+        sells: 0,
+      },
+      h6: {
+        buys: 0,
+        sells: 0,
+      },
+      h1: {
+        buys: 0,
+        sells: 0,
+      },
+      m5: {
+        buys: 0,
+        sells: 0,
+      },
+    },
+    volume: {
+      h24: 0,
+      h6: 0,
+      h1: 0,
+      m5: 0,
+    },
   });
+  const [index, setIndex] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [fetching, setFetching] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchData = async (url: string) => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(url);
+        console.log('fetching', fetching);
+        if (fetching) return;
+        setFetching(true);
+        const response = await fetch('/api/data');
+        const jsonData = await response.json();
 
-        return await response.json();
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (_) {
-        return null;
+        if (jsonData && jsonData.fearData) {
+          setFearData(jsonData.fearData);
+        }
+
+        if (jsonData && jsonData.greedData) {
+          setGreedData(jsonData.greedData);
+        }
+
+        if (jsonData && jsonData.index) {
+          setIndex(jsonData.index);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setFetching(false);
+        setIsLoading(false);
       }
     };
 
-    const fetchTokensData = async () => {
-      const tokensData = await fetchData(
-        `${siteConfig.links.dexscreenerTokens}/${siteConfig.fearToken},${siteConfig.greedToken}`,
-      );
+    // Fetch data immediately on mount
+    fetchData();
 
-      if (tokensData && tokensData.length > 0) {
-        setFearData({
-          priceUsd: tokensData[0].priceUsd ?? 0,
-          marketCap: tokensData[0].marketCap ?? 0,
-          volume24Hr: tokensData[0].volume.h24 ?? 0,
-          liquidity: tokensData[0].liquidity.usd ?? 0,
-          priceChange: {
-            h24: tokensData[0].priceChange.h24 ?? 0,
-            h6: tokensData[0].priceChange.h6 ?? 0,
-            h1: tokensData[0].priceChange.h1 ?? 0,
-            m5: tokensData[0].priceChange.m5 ?? 0,
-          },
-        });
-      }
-
-      if (tokensData && tokensData.length > 1) {
-        setGreedData({
-          priceUsd: tokensData[1].priceUsd ?? 0,
-          marketCap: tokensData[1].marketCap ?? 0,
-          volume24Hr: tokensData[1].volume.h24 ?? 0,
-          liquidity: tokensData[1].liquidity.usd ?? 0,
-          priceChange: {
-            h24: tokensData[1].priceChange.h24 ?? 0,
-            h6: tokensData[1].priceChange.h6 ?? 0,
-            h1: tokensData[1].priceChange.h1 ?? 0,
-            m5: tokensData[1].priceChange.m5 ?? 0,
-          },
-        });
-      }
-    };
-
-    const intervalId = setInterval(() => {
-      fetchTokensData();
-    }, 1000);
+    const intervalId = setInterval(fetchData, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <TokenDataContext.Provider value={{ fearData, greedData }}>
-      {children}
+    <TokenDataContext.Provider value={{ fearData, greedData, index }}>
+      {isLoading ? undefined : children}
     </TokenDataContext.Provider>
   );
 };
