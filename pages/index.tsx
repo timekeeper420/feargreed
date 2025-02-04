@@ -23,7 +23,7 @@ export default function IndexPage() {
           <div className={subtitle({ class: 'mt-4' })}>
             Multifactorial Memecoin Market Sentiment Analysis
           </div>
-          <div className="inline-block w-full justify-center text-center">
+          <div className="inline-flex w-full items-center justify-center text-center">
             <span className="text-lg">Now:&nbsp;</span>
             <span
               className={clsx(
@@ -50,22 +50,26 @@ export default function IndexPage() {
           </div>
         </div>
 
-        <div className="mt-10 flex">
-          <Gauge index={index} />
-        </div>
+        <Gauge index={index} />
 
-        <div className="mt-8 flex flex-row flex-wrap gap-4">
+        <div className="mt-16 grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
           <TokenCard
+            key={siteConfig.fearToken}
             buyLink={siteConfig.links.buyFear}
             color="danger"
+            index={0}
+            swapLink={siteConfig.links.swapFear}
             tokenAddress={siteConfig.fearToken}
             tokenData={fearData}
             tokenName="$FEAR"
           />
 
           <TokenCard
+            key={siteConfig.greedToken}
             buyLink={siteConfig.links.buyGreed}
             color="success"
+            index={1}
+            swapLink={siteConfig.links.swapGreed}
             tokenAddress={siteConfig.greedToken}
             tokenData={greedData}
             tokenName="$GREED"

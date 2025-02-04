@@ -17,7 +17,7 @@ export default function DefaultLayout({
       <Head />
       <Navbar />
       <main className="container mx-auto flex flex-grow items-center justify-center overflow-y-auto px-6 py-16">
-        <section className="flex flex-col items-center justify-center">
+        <section className="flex w-full flex-col items-center justify-center">
           {children}
         </section>
       </main>

@@ -1,7 +1,6 @@
-import { useInView } from 'framer-motion';
 import { useSpring } from 'framer-motion';
 import { useMotionValue } from 'framer-motion';
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 /**
  * Animated counter component.
@@ -11,47 +10,44 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 're
 interface CounterProps {
   value: number;
   className?: string;
-  decimalPlaces?: number;
+  options?: Intl.NumberFormatOptions;
 }
 
 const Counter = forwardRef<HTMLSpanElement, CounterProps>(
-  ({ value, className, decimalPlaces = 0 }: CounterProps, ref) => {
-    const [prevValue, setPrevValue] = useState<number>(0);
-    const motionValue = useMotionValue(prevValue ? value > prevValue ? 0 : value : value);
+  ({ value, className, options }: CounterProps, ref) => {
+    const motionValue = useMotionValue(0);
     const springValue = useSpring(motionValue, {
       damping: 100,
       stiffness: 100,
     });
     const spanRef = useRef<HTMLSpanElement>(null);
-    const isInView = useInView(spanRef, { once: true, margin: '-100px' });
 
     useImperativeHandle(ref, () => spanRef.current!);
 
     useEffect(() => {
-      if (isInView) {
-        motionValue.set(prevValue ? value > prevValue ? 0 : value : value); // Animate up or down
-        setPrevValue(value);
-      }
-    }, [motionValue, isInView, value, prevValue]);
+      motionValue.set(value);
+    }, [motionValue, value]);
 
-    useEffect(
-      () =>
-        springValue.on('change', (latest) => {
-          if (spanRef.current) {
-            spanRef.current.textContent = Intl.NumberFormat('en-US', {
-              maximumFractionDigits: decimalPlaces,
-            }).format(latest);
-          }
-        }),
-      [springValue, decimalPlaces],
-    );
+    useEffect(() => {
+      motionValue.set(value);
+    }, [value, motionValue]);
+
+    useEffect(() => {
+      const unsubscribe = springValue.on('change', latest => {
+        if (spanRef.current) {
+          spanRef.current.textContent = Intl.NumberFormat(
+            'en-US',
+            options,
+          ).format(latest);
+        }
+      });
+
+      return () => unsubscribe();
+    }, [springValue, options]);
 
     return (
-      <span
-        ref={spanRef}
-        className={className}
-      >
-        {Number(0).toFixed(decimalPlaces)}
+      <span ref={spanRef} className={className}>
+        {Number(0).toFixed(options?.maximumFractionDigits ?? 2)}
       </span>
     );
   },

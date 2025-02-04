@@ -145,7 +145,6 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
   });
   const [index, setIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [fetching, setFetching] = useState<boolean>(false);
 
   const calculateIndex = useCallback(
     (fearData: TokenData, greedData: TokenData): number => {
@@ -204,17 +203,13 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (fetching) return;
-
-        setFetching(true);
-
         const response = await fetch(
           `${siteConfig.links.dexscreenerTokens}/${siteConfig.fearToken},${siteConfig.greedToken}`,
         );
 
         const tokensData = await response.json();
 
-        const fearTokenData: TokenData = tokensData &&
+        const fearTokenData = tokensData &&
           tokensData.length > 0 && {
             priceUsd: tokensData[0].priceUsd ?? 0,
             marketCap: tokensData[0].marketCap ?? 0,
@@ -226,11 +221,33 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
               h1: tokensData[0].priceChange.h1 ?? 0,
               m5: tokensData[0].priceChange.m5 ?? 0,
             },
-            txns: tokensData[0].txns,
-            volume: tokensData[0].volume,
+            txns: {
+              h24: {
+                buys: tokensData[0].txns.h24.buys ?? 0,
+                sells: tokensData[0].txns.h24.sells ?? 0,
+              },
+              h6: {
+                buys: tokensData[0].txns.h6.buys ?? 0,
+                sells: tokensData[0].txns.h6.sells ?? 0,
+              },
+              h1: {
+                buys: tokensData[0].txns.h1.buys ?? 0,
+                sells: tokensData[0].txns.h1.sells ?? 0,
+              },
+              m5: {
+                buys: tokensData[0].txns.m5.buys ?? 0,
+                sells: tokensData[0].txns.m5.sells ?? 0,
+              },
+            },
+            volume: {
+              h24: tokensData[0].volume.h24 ?? 0,
+              h6: tokensData[0].volume.h6 ?? 0,
+              h1: tokensData[0].volume.h1 ?? 0,
+              m5: tokensData[0].volume.m5 ?? 0,
+            },
           };
 
-        const greedTokenData: TokenData = tokensData &&
+        const greedTokenData = tokensData &&
           tokensData.length > 1 && {
             priceUsd: tokensData[1].priceUsd ?? 0,
             marketCap: tokensData[1].marketCap ?? 0,
@@ -242,25 +259,38 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
               h1: tokensData[1].priceChange.h1 ?? 0,
               m5: tokensData[1].priceChange.m5 ?? 0,
             },
-            txns: tokensData[1].txns,
-            volume: tokensData[1].volume,
+            txns: {
+              h24: {
+                buys: tokensData[1].txns.h24.buys ?? 0,
+                sells: tokensData[1].txns.h24.sells ?? 0,
+              },
+              h6: {
+                buys: tokensData[1].txns.h6.buys ?? 0,
+                sells: tokensData[1].txns.h6.sells ?? 0,
+              },
+              h1: {
+                buys: tokensData[1].txns.h1.buys ?? 0,
+                sells: tokensData[1].txns.h1.sells ?? 0,
+              },
+              m5: {
+                buys: tokensData[1].txns.m5.buys ?? 0,
+                sells: tokensData[1].txns.m5.sells ?? 0,
+              },
+            },
+            volume: {
+              h24: tokensData[1].volume.h24 ?? 0,
+              h6: tokensData[1].volume.h6 ?? 0,
+              h1: tokensData[1].volume.h1 ?? 0,
+              m5: tokensData[1].volume.m5 ?? 0,
+            },
           };
 
-        if (fearTokenData) {
-          setFearData(fearTokenData);
-        }
-
-        if (greedTokenData) {
-          setGreedData(greedTokenData);
-        }
-
-        if (fearTokenData && greedTokenData) {
-          setIndex(calculateIndex(fearTokenData, greedTokenData));
-        }
+        setFearData(fearTokenData);
+        setGreedData(greedTokenData);
+        setIndex(calculateIndex(fearTokenData, greedTokenData));
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
-        setFetching(false);
         setIsLoading(false);
       }
     };

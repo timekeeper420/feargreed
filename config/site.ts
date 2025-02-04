@@ -21,7 +21,11 @@ export const siteConfig = {
     dexscreenerTokens: 'https://api.dexscreener.com/tokens/v1/solana',
     buyFear:
       'https://jup.ag/swap/SOL-9L9kmv6qNrjtZR85CHYppzv56UvvFQzmXiiYPxLJpump',
+    swapFear:
+      'https://jup.ag/swap/9L9kmv6qNrjtZR85CHYppzv56UvvFQzmXiiYPxLJpump-DdtbTZmi6sSXCMeSWrMFPJxBeLvb86apEwmdxumcpump',
     buyGreed:
       'https://jup.ag/swap/SOL-DdtbTZmi6sSXCMeSWrMFPJxBeLvb86apEwmdxumcpump',
+    swapGreed:
+      'https://jup.ag/swap/DdtbTZmi6sSXCMeSWrMFPJxBeLvb86apEwmdxumcpump-9L9kmv6qNrjtZR85CHYppzv56UvvFQzmXiiYPxLJpump',
   },
 };

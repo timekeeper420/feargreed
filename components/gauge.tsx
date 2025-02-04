@@ -51,7 +51,7 @@ export const Gauge = ({ index }: GaugeProps) => {
   }, [index]);
 
   return (
-    <div className="gauge">
+    <div className="gauge mt-10">
       <div className="gaugeCenter" />
       <motion.div
         ref={needleRef}
@@ -60,7 +60,12 @@ export const Gauge = ({ index }: GaugeProps) => {
         initial={{ rotate: 0 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       >
-        <Counter ref={numberRef} className="number" value={index} />
+        <Counter
+          ref={numberRef}
+          className="number"
+          options={{ maximumFractionDigits: 0 }}
+          value={index}
+        />
       </motion.div>
     </div>
   );
