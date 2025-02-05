@@ -1,5 +1,4 @@
 import { Head } from './head';
-import { Alert } from '@heroui/alert';
 import { Link } from '@heroui/link';
 
 import { TwitterIcon } from '@/components/icons';
@@ -16,31 +15,6 @@ export default function DefaultLayout({
   return (
     <div className="relative flex min-h-screen flex-col">
       <Head />
-      <Alert
-        hideIcon
-        isClosable
-        classNames={{
-          base: 'flex-grow-0 flex-shrink bg-fear text-white px-8 sm:px-3 py-3 relative',
-          mainWrapper: 'flex-grow-0 flex-shrink min-h-full w-full',
-          description: 'flex-grow-0 flex-shrink text-title text-md w-full text-center',
-          closeButton: "absolute top-1/2 -translate-y-1/2 right-4 text-white"
-        }}
-        color="warning"
-        description={
-          <>
-            Giving away $FEAR and $GREED
-            <Link
-              isExternal
-              className="text-title ml-1 underline"
-              href="https://x.com/memeclock420/status/1886934402938065208"
-            >
-              Join the giveaway
-            </Link>
-          </>
-        }
-        radius="none"
-        variant="flat"
-      />
       <Navbar />
       <main className="container mx-auto flex flex-grow items-center justify-center overflow-y-auto px-6 py-16">
         <section className="flex w-full flex-col items-center justify-center">
