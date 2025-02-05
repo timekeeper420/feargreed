@@ -6,7 +6,7 @@ import { Gauge } from '@/components/gauge';
 import { subtitle, title } from '@/components/primitives';
 import { TokenCard } from '@/components/token-card';
 import { siteConfig } from '@/config/site';
-import { useTokenData } from '@/context/TokenDataContext';
+import { useTokenData } from '@/context/token-data';
 import DefaultLayout from '@/layouts/default';
 
 export default function IndexPage() {

@@ -6,7 +6,7 @@ import { Snippet } from '@heroui/snippet';
 import clsx from 'clsx';
 
 import Counter from '@/components/counter';
-import { TokenData } from '@/context/TokenDataContext';
+import { TokenData } from '@/context/token-data';
 
 interface TokenCardProps {
   /**

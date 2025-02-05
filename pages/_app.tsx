@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 
 import { fontMono, fontSans } from '@/config/fonts';
-import { TokenDataProvider } from '@/context/TokenDataContext';
+import { TokenDataProvider } from '@/context/token-data';
 import '@/styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
