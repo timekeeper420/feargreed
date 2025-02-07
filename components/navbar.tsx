@@ -13,6 +13,7 @@ import NextLink from 'next/link';
 import { TelegramIcon, TwitterIcon } from '@/components/icons';
 import { title } from '@/components/primitives';
 import { ThemeSwitch } from '@/components/theme-switch';
+import links from '@/config/links';
 import { siteConfig } from '@/config/site';
 
 export const Navbar = () => {
@@ -21,7 +22,7 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="max-w-fit gap-3">
           <NextLink className="flex items-center justify-start gap-1" href="/">
-            <p className=" md:text-2xl font-bold text-inherit">
+            <p className="font-bold text-inherit md:text-2xl">
               <span className={title({ color: 'red', size: 'sm' })}>$FEAR</span>{' '}
               &{' '}
               <span className={title({ color: 'green', size: 'sm' })}>
@@ -36,7 +37,7 @@ export const Navbar = () => {
             as={Link}
             className="bg-danger text-white"
             color="danger"
-            href={siteConfig.links.buyFear}
+            href={links.buy.fear}
             size="sm"
             variant="flat"
           >
@@ -49,7 +50,7 @@ export const Navbar = () => {
             as={Link}
             className="bg-success text-white"
             color="success"
-            href={siteConfig.links.buyGreed}
+            href={links.buy.greed}
             size="sm"
             variant="flat"
           >
@@ -76,7 +77,7 @@ export const Navbar = () => {
             as={Link}
             className="bg-danger text-white"
             color="danger"
-            href={siteConfig.links.buyFear}
+            href={links.buy.fear}
             size="lg"
             variant="flat"
           >
@@ -89,7 +90,7 @@ export const Navbar = () => {
             as={Link}
             className="bg-success text-white"
             color="success"
-            href={siteConfig.links.buyGreed}
+            href={links.buy.greed}
             size="lg"
             variant="flat"
           >

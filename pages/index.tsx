@@ -2,10 +2,12 @@
 
 import clsx from 'clsx';
 
+import Chart from '@/components/chart';
 import { Gauge } from '@/components/gauge';
 import { subtitle, title } from '@/components/primitives';
 import { TokenCard } from '@/components/token-card';
-import { siteConfig } from '@/config/site';
+import links from '@/config/links';
+import tokens from '@/config/tokens';
 import { useTokenData } from '@/context/token-data';
 import DefaultLayout from '@/layouts/default';
 
@@ -52,28 +54,33 @@ export default function IndexPage() {
 
         <Gauge index={index} />
 
-        <div className="mt-16 grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="mt-16 grid w-full grid-cols-1 gap-8 lg:grid-cols-2">
           <TokenCard
-            key={siteConfig.fearToken}
-            buyLink={siteConfig.links.buyFear}
+            key="fear"
+            buyLink={links.buy.fear}
             color="danger"
             index={0}
-            swapLink={siteConfig.links.swapFear}
-            tokenAddress={siteConfig.fearToken}
+            swapLink={links.swap.fear}
+            tokenAddress={tokens.fear}
             tokenData={fearData}
+            tokenKey="fear"
             tokenName="$FEAR"
           />
-
           <TokenCard
-            key={siteConfig.greedToken}
-            buyLink={siteConfig.links.buyGreed}
+            key="greed"
+            buyLink={links.buy.greed}
             color="success"
             index={1}
-            swapLink={siteConfig.links.swapGreed}
-            tokenAddress={siteConfig.greedToken}
+            swapLink={links.swap.greed}
+            tokenAddress={tokens.greed}
             tokenData={greedData}
+            tokenKey="greed"
             tokenName="$GREED"
           />
+        </div>
+
+        <div className="mt-0 w-full grid-cols-1">
+          <Chart />
         </div>
       </div>
     </DefaultLayout>

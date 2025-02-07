@@ -1,4 +1,6 @@
+import { Avatar } from '@heroui/avatar';
 import { Card, CardBody, CardFooter, CardHeader } from '@heroui/card';
+import { Chip } from '@heroui/chip';
 import { Code } from '@heroui/code';
 import { Divider } from '@heroui/divider';
 import { Link } from '@heroui/link';
@@ -6,13 +8,18 @@ import { Snippet } from '@heroui/snippet';
 import clsx from 'clsx';
 
 import Counter from '@/components/counter';
+import links from '@/config/links';
 import { TokenData } from '@/context/token-data';
 
 interface TokenCardProps {
   /**
-   * The key of the token.
+   * The key of the component.
    */
   key: string;
+  /**
+   * The key of the token.
+   */
+  tokenKey: 'fear' | 'greed';
   /**
    * The index of the token.
    */
@@ -49,7 +56,7 @@ interface TokenCardProps {
  */
 export const TokenCard = ({
   key,
-  index,
+  tokenKey,
   tokenName,
   tokenData,
   tokenAddress,
@@ -57,17 +64,13 @@ export const TokenCard = ({
   swapLink,
   color,
 }: TokenCardProps) => (
-  <Card
-    key={key}
-    className={clsx(index === 0 ? 'lg:ml-auto' : 'lg:mr-auto', 'mb-4')}
-    shadow="sm"
-  >
-    <CardHeader className="flex gap-3">
+  <Card key={key} className={clsx('mb-4')} shadow="sm">
+    <CardHeader className="flex flex-col gap-1">
       <Snippet
         hideSymbol
         classNames={{
-          base: 'flex items-center justify-between p-0 bg-transparent w-full',
-          pre: 'min-w-0 flex-1 truncate',
+          base: 'flex items-center justify-start p-0 bg-transparent w-full',
+          pre: 'min-w-0 truncate',
           copyButton: 'min-w-8 w-8 shrink-0',
           content: 'flex items-center gap-1 min-w-0 flex-1',
         }}
@@ -79,8 +82,7 @@ export const TokenCard = ({
             {tokenName}:
           </span>
           <Code
-            className={`bg-${color}/50 min-w-0 max-w-[calc(100%-3rem)] overflow-hidden truncate text-ellipsis whitespace-nowrap font-mono sm:max-w-none`}
-            color={color}
+            className={`bg-${color}/50 min-w-0 max-w-[calc(100%-3rem)] overflow-hidden truncate text-ellipsis whitespace-nowrap bg-transparent px-0 font-mono sm:max-w-none`}
           >
             {tokenAddress}
           </Code>
@@ -235,6 +237,96 @@ export const TokenCard = ({
           />
           %
         </span>
+      </span>
+    </CardBody>
+    <Divider />
+    <CardBody className="flex flex-col justify-between gap-2">
+      <span className="mb-1 flex w-full min-w-0 items-center gap-2 font-mono text-sm">
+        {links.analysis.map((analysis, index) => (
+          <Link
+            key={`analysis-${analysis.name}-${index}`}
+            isExternal
+            href={analysis[tokenKey]}
+          >
+            <Chip
+              avatar={
+                <Avatar
+                  classNames={{
+                    base: 'bg-transparent',
+                  }}
+                  name={analysis.name}
+                  size="sm"
+                  src={analysis.image}
+                />
+              }
+              classNames={{
+                content: 'hidden sm:inline',
+              }}
+              size="sm"
+              variant="flat"
+            >
+              {analysis.name}
+            </Chip>
+          </Link>
+        ))}
+      </span>
+      <span className="mb-1 flex w-full min-w-0 items-center gap-2 font-mono text-sm">
+        {links.price.map((price, index) => (
+          <Link
+            key={`price-${price.name}-${index}`}
+            isExternal
+            href={price[tokenKey]}
+          >
+            <Chip
+              avatar={
+                <Avatar
+                  classNames={{
+                    base: 'bg-transparent',
+                  }}
+                  name={price.name}
+                  size="sm"
+                  src={price.image}
+                />
+              }
+              classNames={{
+                content: 'hidden sm:inline',
+              }}
+              size="sm"
+              variant="flat"
+            >
+              {price.name}
+            </Chip>
+          </Link>
+        ))}
+      </span>
+      <span className="flex w-full min-w-0 items-center gap-2 font-mono text-sm">
+        {links.bots.map((bot, index) => (
+          <Link
+            key={`bot-${bot.name}-${index}`}
+            isExternal
+            href={bot[tokenKey]}
+          >
+            <Chip
+              avatar={
+                <Avatar
+                  classNames={{
+                    base: 'bg-transparent',
+                  }}
+                  name={bot.name}
+                  size="sm"
+                  src={bot.image}
+                />
+              }
+              classNames={{
+                content: 'hidden sm:inline',
+              }}
+              size="sm"
+              variant="flat"
+            >
+              {bot.name}
+            </Chip>
+          </Link>
+        ))}
       </span>
     </CardBody>
     <Divider />

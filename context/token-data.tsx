@@ -7,7 +7,8 @@ import {
   useState,
 } from 'react';
 
-import { siteConfig } from '@/config/site';
+import api from '@/config/api';
+import tokens from '@/config/tokens';
 
 export interface TokenData {
   priceUsd: number;
@@ -204,7 +205,7 @@ export const TokenDataProvider = ({ children }: TokenDataProviderProps) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${siteConfig.links.dexscreenerTokens}/${siteConfig.fearToken},${siteConfig.greedToken}`,
+          `${api.dexscreener.tokens}/${tokens.fear},${tokens.greed}`,
         );
 
         const tokensData = await response.json();
